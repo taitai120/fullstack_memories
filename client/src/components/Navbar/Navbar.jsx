@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import useStyles from "./styles.js";
 import memories from "./../../images/memories.png";
 import { AppBar, Avatar, Toolbar, Typography, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({}) => {
     const classes = useStyles();
 
-    const user = null;
+    const [user, setUser] = useState(
+        JSON.parse(localStorage.getItem("profile"))
+    );
+
+    useEffect(() => {
+        const token = user?.token;
+
+        // JWT...
+        setUser(JSON.parse(localStorage.getItem("profile")));
+    }, []);
 
     return (
         <AppBar className={classes.appBar} position="static" color="inherit">
@@ -33,13 +42,13 @@ const Navbar = () => {
                     <div className={classes.profile}>
                         <Avatar
                             className={classes.purple}
-                            alt={user.result.name}
-                            src={user.result.imageUrl}
+                            alt={user?.name}
+                            src={user?.picture}
                         >
-                            {user.result.name.charAt(0)}
+                            {user?.name?.charAt(0)}
                         </Avatar>
                         <Typography className={classes.userName} variant="h6">
-                            {user.result.name}
+                            {user?.name}
                         </Typography>
                         <Button
                             variant="contained"
