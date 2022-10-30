@@ -18,7 +18,7 @@ import { actionLogin } from "../../redux/actions/authAction";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
-const Auth = ({ user }) => {
+const Auth = () => {
     const classes = useStyles();
 
     const navigate = useNavigate();

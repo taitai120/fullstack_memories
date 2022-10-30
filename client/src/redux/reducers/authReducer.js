@@ -12,8 +12,6 @@ const authReducer = (state = initialState, action) => {
                 JSON.stringify({ ...action?.data })
             );
 
-            console.log(state.authData);
-
             return { ...state, authData: action?.data };
         }
         case type.LOGOUT: {
