@@ -14,9 +14,10 @@ import Input from "./Input";
 import Icon from "./icon";
 import { GoogleLogin } from "@react-oauth/google";
 import { useDispatch, useSelector } from "react-redux";
-import { actionLogin } from "../../redux/actions/authAction";
+import { actionLogin, actionSignup } from "../../redux/actions/authAction";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import * as type from "../../redux/constants/authConstant";
 
 const Auth = () => {
     const classes = useStyles();
@@ -27,12 +28,35 @@ const Auth = () => {
 
     const [isSignUp, setIsSignUp] = useState(false);
 
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
+
     const dispatch = useDispatch();
 
-    const handleChange = (e) => {};
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (isSignUp) {
+            // Create
+            dispatch(actionSignup(formData, navigate));
+        } else {
+            // Login
+            dispatch(actionLogin(formData, navigate));
+        }
     };
 
     const handleShowPassword = () => {
@@ -41,7 +65,7 @@ const Auth = () => {
 
     const switchMode = () => {
         setIsSignUp((prevIsSignup) => !prevIsSignup);
-        handleShowPassword(false);
+        setShowPassword(false);
     };
 
     const googleSuccess = async (res) => {
@@ -49,8 +73,14 @@ const Auth = () => {
         const credential = res?.credential;
 
         try {
-            const data = { ...jwt_decode(credential), token: credential };
-            dispatch(actionLogin(data));
+            const data = {
+                ...jwt_decode(credential),
+                access_token: credential,
+            };
+            dispatch({
+                type: type.AUTH,
+                data,
+            });
             navigate("/");
         } catch (err) {
             console.log(err);
@@ -82,8 +112,8 @@ const Auth = () => {
                                     half
                                 />
                                 <Input
-                                    name="firstName"
-                                    label="First Name"
+                                    name="lastName"
+                                    label="Last Name"
                                     handleChange={handleChange}
                                     half
                                 />
@@ -124,7 +154,7 @@ const Auth = () => {
                         onSuccess={googleSuccess}
                         onError={googleError}
                     />
-                    <Grid container justify="flex-end">
+                    <Grid container justifyContent="flex-end">
                         <Grid item>
                             <Button onClick={switchMode}>
                                 {isSignUp

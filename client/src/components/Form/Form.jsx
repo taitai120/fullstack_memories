@@ -4,10 +4,10 @@ import FileBase from "react-file-base64";
 import useStyles from "./styles";
 import { createPost, updatePost } from "../../redux/actions/postAction";
 import { useDispatch, useSelector } from "react-redux";
+import { post } from "jquery";
 
 const Form = ({ currentId, setCurrentId }) => {
     const [postData, setPostData] = useState({
-        creator: "",
         title: "",
         message: "",
         tags: "",
@@ -15,6 +15,8 @@ const Form = ({ currentId, setCurrentId }) => {
     });
 
     const [title, setTitle] = useState("Creating");
+
+    const user = JSON.parse(localStorage.getItem("profile"));
 
     const dispatch = useDispatch();
 
@@ -43,9 +45,13 @@ const Form = ({ currentId, setCurrentId }) => {
         e.preventDefault();
 
         if (currentId) {
-            const post = await dispatch(updatePost(currentId, postData));
+            const post = await dispatch(
+                updatePost(currentId, { ...postData, name: user?.name })
+            );
         } else {
-            const newPost = await dispatch(createPost(postData));
+            const newPost = await dispatch(
+                createPost({ ...postData, name: user?.name })
+            );
         }
 
         clearData();
@@ -54,13 +60,23 @@ const Form = ({ currentId, setCurrentId }) => {
     const clearData = () => {
         setCurrentId(null);
         setPostData({
-            creator: "",
             title: "",
             message: "",
             tags: "",
             selectedFile: "",
         });
     };
+
+    if (!user?.name) {
+        return (
+            <Paper className={classes.paper}>
+                <Typography variant="h6" align="center">
+                    Please Sign In to create your own memories and like other's
+                    memories.
+                </Typography>
+            </Paper>
+        );
+    }
 
     return (
         <Paper className={classes.paper}>
@@ -75,14 +91,6 @@ const Form = ({ currentId, setCurrentId }) => {
                         ? "Creating a Memory"
                         : "Updating a Memory"}
                 </Typography>
-                <TextField
-                    name="creator"
-                    variant="outlined"
-                    label="Creator"
-                    fullWidth
-                    value={postData.creator}
-                    onChange={handleChange}
-                />
                 <TextField
                     name="title"
                     variant="outlined"

@@ -19,6 +19,9 @@ const authReducer = (state = initialState, action) => {
 
             return { ...state, authData: null };
         }
+        case type.SIGNUP: {
+            return { ...state };
+        }
         default:
             return state;
     }

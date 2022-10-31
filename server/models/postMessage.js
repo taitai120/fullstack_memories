@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const postSchema = mongoose.Schema({
+const postSchema = new mongoose.Schema({
     title: {
         type: String,
         required: [true, "Title must not be empty"],
@@ -9,6 +9,7 @@ const postSchema = mongoose.Schema({
         type: String,
         required: [true, "Message must not be empty"],
     },
+    name: String,
     creator: {
         type: String,
         required: [true, "Creator must not be empty"],
@@ -22,9 +23,9 @@ const postSchema = mongoose.Schema({
     selectedFile: {
         type: String,
     },
-    likeCount: {
-        type: Number,
-        default: 0,
+    likes: {
+        type: [String],
+        default: [],
     },
     createdAt: {
         type: Date,
