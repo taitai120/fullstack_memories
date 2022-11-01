@@ -5,6 +5,7 @@ import { AppBar, Avatar, Toolbar, Typography, Button } from "@material-ui/core";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { actionLogout } from "../../redux/actions/authAction.js";
+import decode from "jwt-decode";
 
 const Navbar = ({}) => {
     const classes = useStyles();
@@ -21,6 +22,14 @@ const Navbar = ({}) => {
 
     useEffect(() => {
         const token = user?.token;
+
+        if (token) {
+            const decodedToken = decode(token);
+
+            if (decodedToken.exp * 1000 < new Date().getTime()) {
+                logout();
+            }
+        }
 
         // JWT...
         setUser(JSON.parse(localStorage.getItem("profile")));

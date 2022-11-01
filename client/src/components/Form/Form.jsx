@@ -4,7 +4,6 @@ import FileBase from "react-file-base64";
 import useStyles from "./styles";
 import { createPost, updatePost } from "../../redux/actions/postAction";
 import { useDispatch, useSelector } from "react-redux";
-import { post } from "jquery";
 
 const Form = ({ currentId, setCurrentId }) => {
     const [postData, setPostData] = useState({
