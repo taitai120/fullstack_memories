@@ -140,4 +140,33 @@ const likePost = async (req, res) => {
     }
 };
 
-export { getPosts, createPost, deletePost, patchPost, likePost };
+const getPostsBySearch = async (req, res) => {
+    try {
+        const { searchQuery, tags } = req.query;
+        const title = new RegExp(searchQuery, "i");
+
+        const posts = await PostMessage.find({
+            $or: [{ title }, { tags: { $in: tags.split(",") } }],
+        });
+
+        return res.status(200).json({
+            status: "Success",
+            results: posts.length,
+            data: posts,
+        });
+    } catch (error) {
+        return res.status(404).json({
+            status: "Fail",
+            message: err.message,
+        });
+    }
+};
+
+export {
+    getPosts,
+    createPost,
+    deletePost,
+    patchPost,
+    likePost,
+    getPostsBySearch,
+};

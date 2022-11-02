@@ -84,4 +84,28 @@ const likePost = (postId) => {
     };
 };
 
-export { actionGetPosts, createPost, updatePost, deletePost, likePost };
+const actionGetPostsBySearch = (searchQuery) => {
+    return async (dispatch) => {
+        try {
+            const {
+                data: { data },
+            } = await api.fetchPostsBySearch(searchQuery);
+
+            dispatch({
+                type: action.FETCH_BY_SEARCH,
+                payload: data,
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+};
+
+export {
+    actionGetPosts,
+    createPost,
+    updatePost,
+    deletePost,
+    likePost,
+    actionGetPostsBySearch,
+};

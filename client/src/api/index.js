@@ -24,6 +24,12 @@ export const updatePost = (id, updatePost) =>
     API.patch(`${postAPI}/${id}`, updatePost);
 export const likePost = (id, updatePost) =>
     API.patch(`${postAPI}/${id}/likePost`, updatePost);
+export const fetchPostsBySearch = (searchQuery) =>
+    API.get(
+        `${postAPI}/search?searchQuery=${searchQuery.search || "none"}&tags=${
+            searchQuery.tags
+        }`
+    );
 
 export const signUp = (newUser) => API.post(`${userAPI}/signup`, newUser);
 export const signIn = (user) => API.post(`${userAPI}/signin`, user);

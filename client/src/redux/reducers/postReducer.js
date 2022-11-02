@@ -1,3 +1,4 @@
+import { actionGetPostsBySearch } from "../actions/postAction";
 import * as type from "../constants/postContant";
 
 const initialState = [];
@@ -5,6 +6,10 @@ const initialState = [];
 const postReducer = (state = initialState, action) => {
     switch (action.type) {
         case type.FETCH_ALL: {
+            return action.payload;
+        }
+
+        case type.FETCH_BY_SEARCH: {
             return action.payload;
         }
 

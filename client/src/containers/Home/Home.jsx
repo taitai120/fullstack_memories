@@ -14,7 +14,10 @@ import ChipInput from "material-ui-chip-input";
 import { useLocation, useNavigate } from "react-router-dom";
 import useStyles from "./styles";
 import { useDispatch } from "react-redux";
-import { actionGetPosts } from "../../redux/actions/postAction";
+import {
+    actionGetPosts,
+    actionGetPostsBySearch,
+} from "../../redux/actions/postAction";
 import Paginate from "../../components/Pagination/Pagination";
 
 const useQuery = () => {
@@ -23,6 +26,8 @@ const useQuery = () => {
 
 const Home = () => {
     const [currentId, setCurrentId] = useState(0);
+    const [search, setSearch] = useState("");
+    const [tags, setTags] = useState([]);
 
     const classes = useStyles();
 
@@ -32,11 +37,42 @@ const Home = () => {
     const navigate = useNavigate();
     const page = query.get("page") || 1;
     const searchQuery = query.get("searchQuery");
-    console.log(page);
 
     useEffect(() => {
         dispatch(actionGetPosts());
     }, [currentId, dispatch]);
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value);
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+
+            // Search
+            searchPost();
+        }
+    };
+
+    const handleAddTag = (tag) => setTags([...tags, tag]);
+
+    const handleDeleteTag = (tagToDelete) =>
+        setTags(tags.filter((tag) => tag !== tagToDelete));
+
+    const searchPost = () => {
+        if ((search.trim() || tags) && (search !== "" || tags.length > 0)) {
+            // dispatch => fetch search post
+            dispatch(actionGetPostsBySearch({ search, tags: tags.join("") }));
+            navigate(
+                `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(
+                    ","
+                )}`
+            );
+        } else {
+            navigate("/");
+        }
+    };
 
     return (
         <Grow in>
@@ -61,9 +97,26 @@ const Home = () => {
                                 name="search"
                                 variant="outlined"
                                 label="Search Memories"
-                                value="TEST"
-                                onChange={() => {}}
+                                onKeyPress={handleKeyPress}
+                                value={search}
+                                onChange={handleSearch}
                             />
+                            <ChipInput
+                                style={{ margin: "10px 0" }}
+                                value={tags}
+                                onAdd={handleAddTag}
+                                onDelete={handleDeleteTag}
+                                label="Search Tags"
+                                variant="outlined"
+                            />
+                            <Button
+                                onClick={searchPost}
+                                className={classes.searchButton}
+                                color="primary"
+                                variant="contained"
+                            >
+                                Search
+                            </Button>
                         </AppBar>
                         <Form
                             currentId={currentId}
