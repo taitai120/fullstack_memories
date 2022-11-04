@@ -1,6 +1,5 @@
 import * as action from "../constants/postContant";
 import * as api from "../../api";
-import { CallToActionRounded } from "@material-ui/icons";
 
 const actionGetPosts = (page) => {
     return async (dispatch) => {
@@ -93,6 +92,22 @@ const likePost = (postId) => {
     };
 };
 
+const commentPost = (value, postId) => {
+    return async (dispatch) => {
+        try {
+            const { data } = await api.comment(value, postId);
+
+            dispatch({
+                type: action.COMMENT_POST,
+                payload: data.data,
+            });
+            return data.data.comments;
+        } catch (err) {
+            console.log(err);
+        }
+    };
+};
+
 const actionGetPostsBySearch = (searchQuery) => {
     return async (dispatch) => {
         try {
@@ -140,6 +155,7 @@ export {
     updatePost,
     deletePost,
     likePost,
+    commentPost,
     actionGetPostsBySearch,
     actionGetPost,
 };

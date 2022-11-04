@@ -25,6 +25,8 @@ export const updatePost = (id, updatePost) =>
     API.patch(`${postAPI}/${id}`, updatePost);
 export const likePost = (id, updatePost) =>
     API.patch(`${postAPI}/${id}/likePost`, updatePost);
+export const comment = (value, id) =>
+    API.post(`${postAPI}/${id}/commentPost`, { value });
 export const fetchPostsBySearch = (searchQuery) =>
     API.get(
         `${postAPI}/search?searchQuery=${searchQuery.search || "none"}&tags=${

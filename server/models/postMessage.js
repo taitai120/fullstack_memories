@@ -17,7 +17,6 @@ const postSchema = new mongoose.Schema({
     tags: [
         {
             type: String,
-            required: [true, "Tags must not be empty"],
         },
     ],
     selectedFile: {
@@ -30,6 +29,10 @@ const postSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: new Date(),
+    },
+    comments: {
+        type: [String],
+        default: [],
     },
 });
 

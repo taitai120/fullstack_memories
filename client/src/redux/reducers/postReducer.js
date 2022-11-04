@@ -1,5 +1,3 @@
-import { ContactSupportOutlined } from "@material-ui/icons";
-import { actionGetPostsBySearch } from "../actions/postAction";
 import * as type from "../constants/postContant";
 
 const initialState = {
@@ -46,9 +44,15 @@ const postReducer = (state = initialState, action) => {
 
         case type.UPDATE:
         case type.LIKE: {
-            console.log(state.posts);
-            let arr = [...state.posts];
-            console.log([...arr, action.payload]);
+            return {
+                ...state,
+                posts: state.posts.map((post) =>
+                    post._id === action.payload_id ? action.payload : post
+                ),
+            };
+        }
+
+        case type.COMMENT_POST: {
             return {
                 ...state,
                 posts: state.posts.map((post) =>

@@ -15,6 +15,7 @@ import {
     actionGetPosts,
 } from "../../../redux/actions/postAction.js";
 import { actionGetPostsBySearch } from "../../../redux/actions/postAction";
+import CommentSection from "../components/CommentSection/CommentSection.jsx";
 
 const PostDetails = () => {
     const { post, posts, isLoading } = useSelector(
@@ -58,8 +59,6 @@ const PostDetails = () => {
     }
 
     const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
-
-    console.log(posts);
 
     const openPost = (_id) => navigate(`/posts/${_id}`);
     return (
@@ -108,7 +107,7 @@ const PostDetails = () => {
                         <strong>Realtime Chat - coming soon!</strong>
                     </Typography>
                     <Divider style={{ margin: "20px 0" }} />
-                    {/* <CommentSection post={post} /> */}
+                    <CommentSection post={post} />
                     <Divider style={{ margin: "20px 0" }} />
                 </div>
                 <div className={classes.imageSection}>
