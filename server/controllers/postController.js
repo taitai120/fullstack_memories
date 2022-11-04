@@ -1,6 +1,24 @@
 import mongoose from "mongoose";
 import PostMessage from "../models/postMessage.js";
 
+const getPost = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const post = await PostMessage.findById(id);
+
+        return res.status(200).json({
+            status: "Success",
+            data: post,
+        });
+    } catch (err) {
+        return res.status(404).json({
+            status: "Fail",
+            message: err.message,
+        });
+    }
+};
+
 const getPosts = async (req, res) => {
     try {
         const { page } = req.query;
@@ -22,7 +40,7 @@ const getPosts = async (req, res) => {
             data: posts,
         });
     } catch (err) {
-        return res.status(409).json({
+        return res.status(404).json({
             status: "Fail",
             message: err.message,
         });
@@ -155,11 +173,9 @@ const getPostsBySearch = async (req, res) => {
     try {
         const { searchQuery, tags } = req.query;
         const title = new RegExp(searchQuery, "i");
-
         const posts = await PostMessage.find({
             $or: [{ title }, { tags: { $in: tags.split(",") } }],
         });
-
         return res.status(200).json({
             status: "Success",
             results: posts.length,
@@ -174,6 +190,7 @@ const getPostsBySearch = async (req, res) => {
 };
 
 export {
+    getPost,
     getPosts,
     createPost,
     deletePost,

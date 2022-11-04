@@ -1,5 +1,6 @@
 import * as action from "../constants/postContant";
 import * as api from "../../api";
+import { CallToActionRounded } from "@material-ui/icons";
 
 const actionGetPosts = (page) => {
     return async (dispatch) => {
@@ -22,7 +23,7 @@ const actionGetPosts = (page) => {
     };
 };
 
-const createPost = (newPost) => {
+const createPost = (newPost, navigate) => {
     return async (dispatch) => {
         try {
             dispatch({ type: action.START_LOADING });
@@ -35,6 +36,8 @@ const createPost = (newPost) => {
                 type: action.CREATE,
                 payload: data,
             });
+
+            navigate(`/posts/${data._id}`);
         } catch (err) {
             console.log(err.response.data.message);
         }
@@ -94,12 +97,33 @@ const actionGetPostsBySearch = (searchQuery) => {
     return async (dispatch) => {
         try {
             dispatch({ type: action.START_LOADING });
-            const res = await api.fetchPostsBySearch(searchQuery);
-
-            const { data } = res;
+            const {
+                data: { data },
+            } = await api.fetchPostsBySearch(searchQuery);
 
             dispatch({
                 type: action.FETCH_BY_SEARCH,
+                payload: { data },
+            });
+
+            dispatch({ type: action.END_LOADING });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+};
+
+const actionGetPost = (id) => {
+    return async (dispatch) => {
+        try {
+            dispatch({ type: action.START_LOADING });
+
+            const { data } = await api.fecthPost(id);
+
+            console.log(data);
+
+            dispatch({
+                type: action.FETCH_POST,
                 payload: data,
             });
 
@@ -117,4 +141,5 @@ export {
     deletePost,
     likePost,
     actionGetPostsBySearch,
+    actionGetPost,
 };

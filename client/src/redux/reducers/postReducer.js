@@ -1,7 +1,9 @@
+import { ContactSupportOutlined } from "@material-ui/icons";
 import { actionGetPostsBySearch } from "../actions/postAction";
 import * as type from "../constants/postContant";
 
 const initialState = {
+    post: {},
     posts: [],
     currentPage: 1,
     numberOfPages: 1,
@@ -16,6 +18,13 @@ const postReducer = (state = initialState, action) => {
 
         case type.END_LOADING: {
             return { ...state, isLoading: false };
+        }
+
+        case type.FETCH_POST: {
+            return {
+                ...state,
+                post: action.payload.data,
+            };
         }
 
         case type.FETCH_ALL: {
@@ -37,10 +46,13 @@ const postReducer = (state = initialState, action) => {
 
         case type.UPDATE:
         case type.LIKE: {
+            console.log(state.posts);
+            let arr = [...state.posts];
+            console.log([...arr, action.payload]);
             return {
                 ...state,
                 posts: state.posts.map((post) =>
-                    post._id === action.payload.id ? action.payload : post
+                    post._id === action.payload_id ? action.payload : post
                 ),
             };
         }

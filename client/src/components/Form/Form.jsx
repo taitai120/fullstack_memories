@@ -4,6 +4,7 @@ import FileBase from "react-file-base64";
 import useStyles from "./styles";
 import { createPost, updatePost } from "../../redux/actions/postAction";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Form = ({ currentId, setCurrentId }) => {
     const [postData, setPostData] = useState({
@@ -19,8 +20,12 @@ const Form = ({ currentId, setCurrentId }) => {
 
     const dispatch = useDispatch();
 
+    const navigate = useNavigate();
+
     const post = useSelector((state) =>
-        currentId ? state.postReducer.find((p) => p._id === currentId) : null
+        currentId
+            ? state.postReducer.posts.find((p) => p._id === currentId)
+            : null
     );
 
     const classes = useStyles();
@@ -43,14 +48,10 @@ const Form = ({ currentId, setCurrentId }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (currentId) {
-            const post = await dispatch(
-                updatePost(currentId, { ...postData, name: user?.name })
-            );
+        if (currentId === 0) {
+            dispatch(createPost({ ...postData, name: user?.name }, navigate));
         } else {
-            const newPost = await dispatch(
-                createPost({ ...postData, name: user?.name })
-            );
+            dispatch(updatePost(currentId, { ...postData, name: user?.name }));
         }
 
         clearData();
@@ -78,7 +79,7 @@ const Form = ({ currentId, setCurrentId }) => {
     }
 
     return (
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} elevation={6}>
             <form
                 autoComplete="off"
                 noValidate

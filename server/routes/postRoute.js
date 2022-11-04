@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    getPost,
     getPosts,
     createPost,
     deletePost,
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.get("/search", getPostsBySearch);
 router.get("/", getPosts);
+router.get("/:id", getPost);
 router.post("/", auth, createPost);
 router.delete("/:id", auth, deletePost);
 router.patch("/:id", auth, patchPost);
