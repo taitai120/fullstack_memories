@@ -1,17 +1,21 @@
 import * as action from "../constants/postContant";
 import * as api from "../../api";
 
-const actionGetPosts = () => {
+const actionGetPosts = (page) => {
     return async (dispatch) => {
         try {
-            const res = await api.fecthPosts();
+            dispatch({ type: action.START_LOADING });
 
-            const { data } = res.data;
+            const res = await api.fecthPosts(page);
+
+            const { data } = res;
 
             dispatch({
                 type: action.FETCH_ALL,
                 payload: data,
             });
+
+            dispatch({ type: action.END_LOADING });
         } catch (err) {
             console.log(err.message);
         }
@@ -21,6 +25,8 @@ const actionGetPosts = () => {
 const createPost = (newPost) => {
     return async (dispatch) => {
         try {
+            dispatch({ type: action.START_LOADING });
+
             const res = await api.createPost(newPost);
 
             const { data } = res.data;
@@ -87,14 +93,17 @@ const likePost = (postId) => {
 const actionGetPostsBySearch = (searchQuery) => {
     return async (dispatch) => {
         try {
-            const {
-                data: { data },
-            } = await api.fetchPostsBySearch(searchQuery);
+            dispatch({ type: action.START_LOADING });
+            const res = await api.fetchPostsBySearch(searchQuery);
+
+            const { data } = res;
 
             dispatch({
                 type: action.FETCH_BY_SEARCH,
                 payload: data,
             });
+
+            dispatch({ type: action.END_LOADING });
         } catch (err) {
             console.log(err);
         }

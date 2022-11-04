@@ -8,7 +8,7 @@ import { Grid, CircularProgress } from "@material-ui/core";
 const Posts = ({ setCurrentId }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const posts = useSelector((state) => state.postReducer);
+    const { posts } = useSelector((state) => state.postReducer);
 
     useEffect(() => {
         const getPosts = () => {

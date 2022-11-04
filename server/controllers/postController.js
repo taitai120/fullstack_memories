@@ -3,11 +3,22 @@ import PostMessage from "../models/postMessage.js";
 
 const getPosts = async (req, res) => {
     try {
-        const posts = await PostMessage.find();
+        const { page } = req.query;
+
+        const limit = 8;
+        const startIndex = (Number(page) - 1) * limit; // get the starting index of every page
+        const total = await PostMessage.countDocuments({});
+
+        const posts = await PostMessage.find()
+            .sort({ _id: -1 })
+            .limit(limit)
+            .skip(startIndex);
 
         return res.status(200).json({
             status: "Success",
             results: posts.length,
+            currentPage: Number(page),
+            totalPage: Math.ceil(total / limit),
             data: posts,
         });
     } catch (err) {

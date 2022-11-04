@@ -1,35 +1,61 @@
 import { actionGetPostsBySearch } from "../actions/postAction";
 import * as type from "../constants/postContant";
 
-const initialState = [];
+const initialState = {
+    posts: [],
+    currentPage: 1,
+    numberOfPages: 1,
+    isLoading: true,
+};
 
 const postReducer = (state = initialState, action) => {
     switch (action.type) {
+        case type.START_LOADING: {
+            return { ...state, isLoading: true };
+        }
+
+        case type.END_LOADING: {
+            return { ...state, isLoading: false };
+        }
+
         case type.FETCH_ALL: {
-            return action.payload;
+            return {
+                ...state,
+                posts: action.payload.data,
+                currentPage: action.payload.currentPage,
+                numberOfPages: action.payload.totalPage,
+            };
         }
 
         case type.FETCH_BY_SEARCH: {
-            return action.payload;
+            return { ...state, posts: action.payload.data };
         }
 
         case type.CREATE: {
-            return [...state, action.payload];
+            return { ...state, posts: [...state.posts, action.payload] };
         }
 
         case type.UPDATE:
         case type.LIKE: {
-            return state.map((post) =>
-                post._id === action.payload._id ? action.payload : post
-            );
+            return {
+                ...state,
+                posts: state.posts.map((post) =>
+                    post._id === action.payload.id ? action.payload : post
+                ),
+            };
         }
 
         case type.DELETE: {
-            return state.filter((post) => post._id !== action.payload);
+            return {
+                ...state,
+                posts: state.posts.filter(
+                    (post) => post._id !== action.payload
+                ),
+            };
         }
 
         default: {
-            return [...state];
+            return { ...state };
         }
     }
 };

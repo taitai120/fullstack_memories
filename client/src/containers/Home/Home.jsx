@@ -38,10 +38,6 @@ const Home = () => {
     const page = query.get("page") || 1;
     const searchQuery = query.get("searchQuery");
 
-    useEffect(() => {
-        dispatch(actionGetPosts());
-    }, [currentId, dispatch]);
-
     const handleSearch = (e) => {
         setSearch(e.target.value);
     };
@@ -123,7 +119,7 @@ const Home = () => {
                             setCurrentId={setCurrentId}
                         />
                         <Paper className={classes.pagination} elevation={6}>
-                            <Paginate />
+                            <Paginate page={page} />
                         </Paper>
                     </Grid>
                 </Grid>
