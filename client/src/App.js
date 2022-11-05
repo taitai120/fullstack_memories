@@ -11,7 +11,7 @@ function App() {
     const user = JSON.parse(localStorage.getItem("profile"));
 
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/">
             <Container maxWidth="xl">
                 <Navbar />
                 <Routes>
