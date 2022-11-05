@@ -1,3 +1,5 @@
+import { ContactSupportOutlined } from "@material-ui/icons";
+import { actionGetPostsBySearch } from "../actions/postAction";
 import * as type from "../constants/postContant";
 
 const initialState = {
@@ -44,21 +46,14 @@ const postReducer = (state = initialState, action) => {
 
         case type.UPDATE:
         case type.LIKE: {
-            return {
-                ...state,
-                posts: state.posts.map((post) =>
-                    post._id === action.payload_id ? action.payload : post
-                ),
-            };
-        }
+            const arr = [...state.posts];
+            const index = arr.findIndex((p) => p._id === action.payload._id);
 
-        case type.COMMENT_POST: {
-            return {
-                ...state,
-                posts: state.posts.map((post) =>
-                    post._id === action.payload_id ? action.payload : post
-                ),
-            };
+            if (index !== -1) {
+                arr[index] = action.payload;
+            }
+
+            return { ...state, posts: arr };
         }
 
         case type.DELETE: {
